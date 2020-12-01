@@ -2,9 +2,9 @@ import socket
 from protocol import Protocol
 from another import Server
 
-PORT = 17017
-CLIENT_PORT = 17019
+PORT = 17020
+CLIENT_PORT = 17018
 
 if __name__ == "__main__":
-    sr1 = Server((CLIENT_PORT, PORT))
-    sr1.listening()
+    sr2 = Server((CLIENT_PORT, PORT))
+    sr2.listening()
