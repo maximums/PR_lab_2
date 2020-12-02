@@ -24,7 +24,6 @@ class DiffieHellman:
         return ency_bytes
     
     def decry(self, data, key):
-        print(data)
         msg = ''
         for byt in data:
             msg += chr(byt - key)

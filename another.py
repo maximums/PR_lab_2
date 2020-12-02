@@ -15,20 +15,6 @@ class Server:
         self.proto_sock.start(self.server_port)
         self.hellman = DiffieHellman()
 
-    def listening(self):
-        # first = self.make_header('bib-bib-bib...')
-        first = {"type": "SERVER", "addr" : self.server_port, "data": 'bib-bib-bib...'}
-        first = json.dumps(first)
-        self.proto_sock.write(first, self.client_port)
-        data = self.proto_sock.read()
-        self.handshake(data)
-        data = self.proto_sock.read()
-        dta, typ = self.check_header(data)
-        if typ == 'CLIENT': # True if msg from client, False if msg from server
-            self.waiting_for_conn()
-        else:
-            self.connected_state()
-    
     def handshake(self, data):
         dat = json.loads(data)
         if 'encry' not in dat.keys():
@@ -39,19 +25,31 @@ class Server:
             data = json.loads(data)
             self.top_secret_key = self.hellman.get_secret_key(data['key'], self.serv_secret)
 
+    def listening(self):
+        first = {"type": "SERVER", "addr" : self.server_port, "data": 'bib-bib-bib...'}
+        first = json.dumps(first)
+        self.proto_sock.write(first, self.client_port)
+        data = self.proto_sock.read()
+        self.handshake(data)
+        while True:
+            data = self.proto_sock.read()
+            dta, typ = self.check_header(data)
+            if typ == 'CLIENT':
+                self.waiting_for_conn()
+            else:
+                self.connected_state()
+    
     def waiting_for_conn(self):
         print('waiting_for_conn')
         self.proto_sock.write(self.make_header(self.encry('Enter number(target server port): ')), self.client_port)
         while True:
-            data = self.proto_sock.read() # trebuie sa scot data din json (self.check_header(data))
+            data = self.proto_sock.read()
             dte, typ = self.check_header(data)
             dte = self.hellman.decry(dte, self.top_secret_key)
             if dte.isdigit():
                 self.target_server_port += dte
                 self.proto_sock.write(self.make_header(self.encry('next digit')), self.client_port)
             else:
-                # self.target_server_port = self.target_server_port[::-1]
-                # print(self.target_server_port)
                 self.proto_sock.write(self.make_header(self.encry('speak pls')), self.client_port)
                 self.connected_state()  
 
@@ -60,17 +58,18 @@ class Server:
 
     def connected_state(self):
         print('connected_state')
-        self.proto_sock.write(self.make_header(self.encry('connection successful')), int(self.target_server_port))
+        self.proto_sock.write(self.make_header('connection successful'), int(self.target_server_port))
         while True:
             data = self.proto_sock.read()
             dta, typ = self.check_header(data)
-            # dta = self.encry(dta)
-            # msg = self.make_header(self.hellman.decry(dta, self.top_secret_key))
             if typ == 'CLIENT':
-                self.proto_sock.write(self.make_header(self.hellman.decry(dta, self.top_secret_key)), int(self.target_server_port))
+                data = self.hellman.decry(dta, self.top_secret_key)
+                # if data == 'bye':
+                #     print(data, ' and poka')
+                #     return
+                self.proto_sock.write(self.make_header(data), int(self.target_server_port))
             else:
-                self.proto_sock.write(self.make_header(self.encry(self.hellman.decry(dta, self.top_secret_key))), self.client_port)
-
+                self.proto_sock.write(self.make_header(self.encry(dta)), self.client_port)
 
     def make_header(self, data):
         fdata = {"type": "SERVER", "addr" : self.server_port, "data": data, "encry": "Diffie Hellman"}

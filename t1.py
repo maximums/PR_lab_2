@@ -12,3 +12,8 @@ if __name__ == "__main__":
     print(string)
     dh = DiffieHellman()
     print(dh.decry(str1, 1))
+
+
+    data = self.make_header("SERVER_SYN")
+        data = json.loads(data).update({"key": self.hellman.generate_key(self.serv_secret)})
+        self.proto_sock.write(json.dumps(data), int(self.target_server_port))
