@@ -22,10 +22,12 @@ class Client:
     def listening(self):
         while True:
             data = self.read_sock.read()
-            print(data, ' and ', type(data))
             data = json.loads(data)
-            # data = self.hellman.decry(data['data'], self.top_secret_key)
-            print(data)
+            if 'encry' in data:
+                msg = self.hellman.decry(data['data'], self.top_secret_key)
+                print(msg)
+            else:
+                print(data['data'])
 
     def speak(self):
         while True:
@@ -38,7 +40,6 @@ class Client:
         # print(fdata['data'])
         if fdata['type'] == 'SERVER':
             self.server_port = fdata['addr']
-            print(fdata['addr'])
         # elif fdata['type'] == 'INIT':
         #     sel
         else:
