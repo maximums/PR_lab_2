@@ -1,27 +1,29 @@
+from protocol import Protocol
+import socket
+import json
 
 class DiffieHellman:
     
     def __init__(self):
-        self.modulus = 9973
-        self.base = 2351
+        self.addr = ''
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.proto_sock = Protocol(sock)
 
-    def generate_key(self, secret):
-        key = int(pow(self.base, secret, self.modulus))
-        return key
-    
-    def get_secret_key(self, key, secret):
-        secr_key = int(pow(key, secret, self.modulus))
-        return secr_key
 
-    def encry(self, msg, key):
-        ency_bytes = []
-        data = msg.encode('utf-8')
-        for byt in data:
-            ency_bytes.append(byt + key)
-        return ency_bytes
-    
-    def decry(self, data, key):
-        msg = ''
-        for byt in data:
-            msg += chr(byt - key)
-        return msg
+    def make_header(self, data):
+        pass
+
+    def check_header(self, data):
+        return json.loads(data)
+
+    def read(self):
+        data = self.proto_sock.read()
+        dt = self.check_header(data)
+        if 'encry' in dt.keys():
+            self.proto_sock.write(data, (socket.gethostname(), dt['addr']))
+        else:
+            pass
+
+
+    def write(self, data, addr):
+        pass

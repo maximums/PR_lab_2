@@ -1,26 +1,34 @@
+import random
+
 class DiffieHellman:
-    shared_prime = 23
-    shared_base = 5
-
-    alice_secret = 6
-    bob_secret = 15
-
-    print("public variables: ")
-    print('shared prime: ', shared_prime, '\nshared base: ', shared_base)
     
-    alice = (shared_base**alice_secret) % shared_prime
+    def __init__(self):
+        self.modulus = 9973
+        self.base = 2351
+        minPrime = 0
+        maxPrime = 1000
 
-    print('Alice sends: ', alice)
+    def generate_key(self, secret):
+        key = int(pow(self.base, secret, self.modulus))
+        return key
+    
+    def get_secret_key(self, key, secret):
+        secr_key = int(pow(key, secret, self.modulus))
+        return secr_key
 
-    bob = (shared_base**bob_secret) % shared_prime
+    def encry(self, msg, key):
+        ency_bytes = []
+        data = msg.encode('utf-8')
+        for byt in data:
+            ency_bytes.append(byt + key)
+        return ency_bytes
+    
+    def decry(self, data, key):
+        print(data)
+        msg = ''
+        for byt in data:
+            msg += chr(byt - key)
+        return msg
 
-    print('Bob sends: ', bob)
-
-    alice_shared_secret = (bob ** alice_secret) % shared_prime
-    print('Alice shared secret: ', alice_shared_secret)
-
-    bob_shared_secret = (alice ** bob_secret) % shared_prime
-    print('Bob shared secret: ', bob_shared_secret)
-
-if __name__ == "__main__":
-    dh = DiffieHellman()
+# if __name__ == "__main__":
+#     DiffieHellman()        

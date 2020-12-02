@@ -5,7 +5,7 @@ from hamming import Hamming
 
 class Protocol:
 
-    BUFF_SIZE = 1024
+    BUFF_SIZE = 4096
 
     def make_mahinatii(self, data):
         data = data.decode('utf-8')
@@ -22,6 +22,14 @@ class Protocol:
             else:
                 msg += self.hamming.data_extract(dta)
         return msg[::-1]
+
+    # def make_header(self, data, typ):
+    #     fdata = {"type": typ, "data": data}
+    #     return json.dumps(fdata)
+
+    # def check_header(self, data):
+    #     fdata = json.loads(data)
+    #     return fdata
     
     def __init__(self, sockt):
         self.sock = sockt
@@ -30,7 +38,6 @@ class Protocol:
           
     def write(self, data, addr):
         data_bytes = self.hamming.make_bytes(data)
-        # self.sock.sendto(data_bytes.encode('utf-8'), addr)
         self.sock.sendto(data_bytes.encode('utf-8'), (self.addr, addr))
 
     def read(self):
