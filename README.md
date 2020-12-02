@@ -3,8 +3,6 @@
 
 ### Author:Dodi Cristian-Dumitru
 #### Group:FAF-181
-<br>
-
 ### Description
 <br>
 
