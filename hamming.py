@@ -4,12 +4,12 @@ class Hamming:
 
     nr_bits = []
 
-    def calcRedundantBits(self, m): 
+    def calc_redundant_bits(self, m): 
         for i in range(m): 
             if(2**i >= m + i + 1): 
                 return i 
     
-    def posRedundantBits(self, data, r): 
+    def pos_redundant_bits(self, data, r): 
         j = 0
         k = 1
         m = len(data) 
@@ -24,7 +24,7 @@ class Hamming:
 
         return res[::-1] 
 
-    def calcParityBits(self, arr, r): 
+    def calc_parity_bits(self, arr, r): 
         n = len(arr) 
         for i in range(r): 
             val = 0
@@ -36,10 +36,10 @@ class Hamming:
         return arr 
     
     
-    def detectError(self, arr): 
+    def detect_error(self, arr): 
         n = len(arr) 
         res = 0
-        for i in range(4): # in range(nr)
+        for i in range(4):
             val = 0
             for j in range(1, n + 1): 
                 if(j & (2**i) == (2**i)): 
@@ -73,10 +73,10 @@ class Hamming:
         msg = bytes(msg, 'utf-8')
         for byte in msg:
             tbyte = bin(byte).replace('0b','')
-            r = self.calcRedundantBits(len(tbyte))
+            r = self.calc_redundant_bits(len(tbyte))
             self.nr_bits.append(r)
-            arr = self.posRedundantBits(tbyte, r)
-            arr = self.calcParityBits(arr, r)
+            arr = self.pos_redundant_bits(tbyte, r)
+            arr = self.calc_parity_bits(arr, r)
             final_bytes = arr + '/' + final_bytes
 
         return final_bytes

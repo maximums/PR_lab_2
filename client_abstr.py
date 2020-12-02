@@ -3,7 +3,7 @@ import socket
 import random
 import threading 
 from _thread import *
-from protocol import Protocol
+from transport import Protocol
 from diffie_hellman import DiffieHellman
 
 class Client:
@@ -49,7 +49,6 @@ class Client:
         self.write_sock.write(self.make_header('SYN'), self.server_port)
         data = self.read_sock.read()
         data = json.loads(data)
-        print('date-->>', data)
         self.top_secret_key = self.hellman.get_secret_key(data['key'], self.client_secret)
         data.update({'encry': 'Diffie Hellman', 'key':self.hellman.generate_key(self.client_secret)})
         data = json.dumps(data)

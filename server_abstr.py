@@ -1,7 +1,7 @@
 import json
 import socket
 import random
-from protocol import Protocol
+from transport import Protocol
 from diffie_hellman import DiffieHellman
 
 class Server:
@@ -64,9 +64,6 @@ class Server:
             dta, typ = self.check_header(data)
             if typ == 'CLIENT':
                 data = self.hellman.decry(dta, self.top_secret_key)
-                # if data == 'bye':
-                #     print(data, ' and poka')
-                #     return
                 self.proto_sock.write(self.make_header(data), int(self.target_server_port))
             else:
                 self.proto_sock.write(self.make_header(self.encry(dta)), self.client_port)

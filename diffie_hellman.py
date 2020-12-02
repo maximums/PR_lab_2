@@ -1,12 +1,9 @@
-import random
 
 class DiffieHellman:
     
     def __init__(self):
         self.modulus = 9973
         self.base = 2351
-        minPrime = 0
-        maxPrime = 1000
 
     def generate_key(self, secret):
         key = int(pow(self.base, secret, self.modulus))
@@ -28,6 +25,3 @@ class DiffieHellman:
         for byt in data:
             msg += chr(byt - key)
         return msg
-
-# if __name__ == "__main__":
-#     DiffieHellman()        

@@ -1,6 +1,5 @@
 import socket
-from protocol import Protocol
-from another import Server
+from server_abstr import Server
 
 PORT = 17020
 CLIENT_PORT = 17018
