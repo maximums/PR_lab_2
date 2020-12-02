@@ -11,7 +11,6 @@ the key exchange is performed in func `def handshake(self, data):` from __server
 For application lvl I tried to make a protocol based on the workings (state machine) of a __stationary telephone__, it is composed of
 __client - server --- server2 - client2__, client abstraction can be found in __client_abstr.py__ and server abstraction in __server_abstr.py__.
 <br>
-
 __client.py__, __client2.py__, __server.py__ and __server2.py__ are just instance of their abstraction in which I define ports for sockets.
 <br>
 
